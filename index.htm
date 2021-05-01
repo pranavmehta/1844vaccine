@@ -1,0 +1,136 @@
+ <!DOCTYPE html>
+<html>
+<body>
+
+<div id="demo">
+  <h2>Cowin slot alert</h2>
+  <h3>Automatically refreshes every 60 seconds</h3>
+  <label for="date">Date (checks 7 days from this date):</label>
+  <input type="text" id="date" name="date"><br><br>
+   <label for="city">Choose cities:</label>
+
+	<select name="city" id="city" multiple>
+	  <option value="603">Ranga Reddy</option>
+	  <option value="581">Hyderabad</option>
+	  <option value="363">Pune</option>
+	  <option value="395">Mumbai</option>
+	  <option value="725">Kolkotta</option>
+	  <option value="265">Bangalore Urban</option>
+	  <option value="140">New Delhi</option>
+	  <option value="149">South Delhi</option>
+	  <option value="145">East Delhi</option>
+	  <option value="142">West Delhi</option>
+	  <option value="146">North Delhi</option>
+	  <option value="154">Ahmedabad</option>
+	  <option value="650">Noida</option>
+	  <option value="167">Valsad</option>
+	  <option value="266">Mysore</option>
+	</select> 
+
+	
+  <input type="checkbox" id="beep" name="beep" value="beep" checked>
+   <label for="beep">Beep on open slots</label><br>
+  <br><br>
+  <button type="button" onclick="Start()">Start</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button type="button" onclick="Stop()">Stop</button>
+  <div id="stats" style="margin-top:10px;"></div>
+  <div id="slots" style="margin-top:10px;"></div>
+</div>
+<script> 
+var ping 
+var now = new Date();
+document.getElementById("date").value = now.toLocaleDateString("en-IN").replace("/", "-").replace("/", "-");
+
+function Start() {
+	Stop();
+	Fetch();
+	ping = setInterval(Fetch, 60000);
+}
+
+function Stop() {
+	if(ping)
+		clearInterval(ping);
+}
+
+function beep() {
+    var snd = new Audio("data:audio/wav;base64,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qJrx4KOQjahZxWbcZgztj2c49nKmkId44S71j0c8eV9yDK6uPRzx5X18eDvjvQ6yKo9ZSS6l//8elePK/Lf//IInrOF/FvDoADYAGBMGb7FtErm5MXMlmPAJQVgWta7Zx2go+8xJ0UiCb8LHHdftWyLJE0QIAIsI+UbXu67dZMjmgDGCGl1H+vpF4NSDckSIkk7Vd+sxEhBQMRU8j/12UIRhzSaUdQ+rQU5kGeFxm+hb1oh6pWWmv3uvmReDl0UnvtapVaIzo1jZbf/pD6ElLqSX+rUmOQNpJFa/r+sa4e/pBlAABoAAAAA3CUgShLdGIxsY7AUABPRrgCABdDuQ5GC7DqPQCgbbJUAoRSUj+NIEig0YfyWUho1VBBBA//uQZB4ABZx5zfMakeAAAAmwAAAAF5F3P0w9GtAAACfAAAAAwLhMDmAYWMgVEG1U0FIGCBgXBXAtfMH10000EEEEEECUBYln03TTTdNBDZopopYvrTTdNa325mImNg3TTPV9q3pmY0xoO6bv3r00y+IDGid/9aaaZTGMuj9mpu9Mpio1dXrr5HERTZSmqU36A3CumzN/9Robv/Xx4v9ijkSRSNLQhAWumap82WRSBUqXStV/YcS+XVLnSS+WLDroqArFkMEsAS+eWmrUzrO0oEmE40RlMZ5+ODIkAyKAGUwZ3mVKmcamcJnMW26MRPgUw6j+LkhyHGVGYjSUUKNpuJUQoOIAyDvEyG8S5yfK6dhZc0Tx1KI/gviKL6qvvFs1+bWtaz58uUNnryq6kt5RzOCkPWlVqVX2a/EEBUdU1KrXLf40GoiiFXK///qpoiDXrOgqDR38JB0bw7SoL+ZB9o1RCkQjQ2CBYZKd/+VJxZRRZlqSkKiws0WFxUyCwsKiMy7hUVFhIaCrNQsKkTIsLivwKKigsj8XYlwt/WKi2N4d//uQRCSAAjURNIHpMZBGYiaQPSYyAAABLAAAAAAAACWAAAAApUF/Mg+0aohSIRobBAsMlO//Kk4soosy1JSFRYWaLC4qZBYWFRGZdwqKiwkNBVmoWFSJkWFxX4FFRQWR+LsS4W/rFRb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VEFHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU291bmRib3kuZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjAwNGh0dHA6Ly93d3cuc291bmRib3kuZGUAAAAAAAAAACU=");  
+    snd.play();
+}
+
+
+
+
+function Fetch() {
+  var UrlTemplate = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={DistId}&date={date}";
+  //var UrlTemplate = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={DistId}&date={date}";
+  var AvailableCenters = new Array();
+  document.getElementById("slots").innerHTML = "";
+  var TotCentersChecked = 0;
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+	 var centers = JSON.parse( this.responseText ).centers;
+	 //console.log(centers);
+	 for(var i = 0; i < centers.length; i++) {
+		for(var j = 0; j < centers[i].sessions.length; j++) {
+			//if (centers[i].sessions[j].session_id == "88d2a4db-7d0f-40fb-9e53-adfc296f5ca4")
+			//console.log(centers[i].sessions[j]);
+			if(centers[i].sessions[j].min_age_limit == 18 && centers[i].sessions[j].available_capacity > 0) {
+				AvailableCenters.push(centers[i]);
+				break;
+			}
+		}
+		TotCentersChecked++;
+	 }
+	 
+    }
+  };
+  
+  var cities = document.getElementById('city');
+
+	for (var i = 0; i < cities.length; i++){
+		if(cities.options[i].selected == false)
+			continue;
+		var URL = UrlTemplate.replace("{DistId}", cities.options[i].value).replace("{date}", document.getElementById("date").value);
+		xhttp.open("GET", URL, false);
+		xhttp.send();
+	}
+
+	var avlCenters = ""
+	 for(var i = 0; i < AvailableCenters.length; i++) {
+		avlCenters += AvailableCenters[i].name + ", " + AvailableCenters[i].block_name + ", " + AvailableCenters[i].district_name;
+			var AvailableVaccines = new Array();
+			for(var j = 0; j < AvailableCenters[i].sessions.length; j++) {
+				if(AvailableCenters[i].sessions[j].min_age_limit == 18 
+					&& AvailableCenters[i].sessions[j].available_capacity > 0
+					&& AvailableCenters[i].sessions[j].vaccine
+					&& !AvailableVaccines.includes(AvailableCenters[i].sessions[j].vaccine)
+					) {
+						AvailableVaccines.push( AvailableCenters[i].sessions[j].vaccine);
+						break;
+				}
+			}
+		if(AvailableVaccines.length > 0)	{
+			avlCenters += " (" + AvailableVaccines.join() + ")";
+		}
+		avlCenters += "<br />";
+		
+	 }
+     document.getElementById("slots").innerHTML = avlCenters;
+	 var current = new Date();
+	 document.getElementById("stats").innerHTML = "Last checked: " + current.toLocaleTimeString() + ", Found: " + AvailableCenters.length + " / " + TotCentersChecked;
+	 
+	 if(AvailableCenters.length && document.getElementById("beep").checked == true) {
+		var x = 0;
+		var intervalID = setInterval(function () {
+			beep();
+		   if (++x === AvailableCenters.length) {
+			   window.clearInterval(intervalID);
+		   }
+		}, 1000);
+	 }
+  
+}
+</script>
+</body>
+</html> 
