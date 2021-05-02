@@ -37,13 +37,17 @@
   <br><br>
   <button type="button" onclick="Start()">Start monitoring...</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <button type="button" onclick="Stop()">Stop</button>
-  <div id="stats" style="margin-top:10px;"></div>
-  <div id="slots" style="margin-top:10px;"></div>
+  <p id="stats" style="margin-top:10px;"></p>
+  <p id="timer"></p>
+  <p id="avlfacilities" style="color:#ff0080"></p>
+  <p id="slots" style="margin-top:10px;color:#0040ff"></p>
 </div>
 <script> 
 var ping 
 var now = new Date();
 document.getElementById("date").value = now.toLocaleDateString("en-IN").replace("/", "-").replace("/", "-");
+var CountDownTimer
+var CountDownStart
 
 function Start() {
 	Stop();
@@ -54,6 +58,7 @@ function Start() {
 function Stop() {
 	if(ping)
 		clearInterval(ping);
+	StopCountDown();
 }
 
 function beep() {
@@ -61,10 +66,33 @@ function beep() {
     snd.play();
 }
 
+function StartCountDown() {
+	CountDownStart = new Date();
+	CountDownTimer = setInterval(ShowTimeOut, 1000);
+	ShowTimeOut();
+}
+
+function StopCountDown() {
+	if(CountDownTimer)
+		clearInterval(CountDownTimer);
+	document.getElementById("timer").innerHTML = "";
+	
+}
 
 
+function ShowTimeOut() {
+	var CurrTime = new Date();
+	var seconds = (CurrTime.getTime() - CountDownStart.getTime()) / 1000;
+	if(60-seconds > 0) {
+		document.getElementById("timer").innerHTML = "Checking again in: " + Math.floor(60-seconds) + " seconds";
+	}
+	else
+		StopCountDown();
+}
 
 function Fetch() {
+  StopCountDown();
+  document.getElementById("timer").innerHTML = "Checking now...";
   var UrlTemplate = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={DistId}&date={date}";
   //var UrlTemplate = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={DistId}&date={date}";
   var AvailableCenters = new Array();
@@ -91,7 +119,9 @@ function Fetch() {
   };
   
   var cities = document.getElementById('city');
-
+	if(cities.selectedIndex == -1) {
+		alert("Please select one or more cities");
+	}
 	for (var i = 0; i < cities.length; i++){
 		if(cities.options[i].selected == false)
 			continue;
@@ -100,8 +130,9 @@ function Fetch() {
 		xhttp.send();
 	}
 
-	var avlCenters = ""
+	var avlCenters = "<ul>"
 	 for(var i = 0; i < AvailableCenters.length; i++) {
+		avlCenters += "<li>";
 		avlCenters += AvailableCenters[i].name + ", " + AvailableCenters[i].block_name + ", " + AvailableCenters[i].district_name;
 			var AvailableVaccines = new Array();
 			for(var j = 0; j < AvailableCenters[i].sessions.length; j++) {
@@ -115,15 +146,22 @@ function Fetch() {
 				}
 			}
 		if(AvailableVaccines.length > 0)	{
-			avlCenters += " (" + AvailableVaccines.join() + ")";
+			avlCenters += " (" + AvailableVaccines.join() + ")";			
 		}
-		avlCenters += "<br />";
-		
+			
+		avlCenters += "</li>";
 	 }
+	 avlCenters += "</ul>";
      document.getElementById("slots").innerHTML = avlCenters;
 	 var current = new Date();
 	 document.getElementById("stats").innerHTML = "Last checked: " + current.toLocaleTimeString() + ", Found: " + AvailableCenters.length + " / " + TotCentersChecked;
-	 
+	 StartCountDown();
+	 if(AvailableCenters.length) {
+		document.getElementById("avlfacilities").innerHTML = "Slots are presently available at these facilities:"
+	 }
+	 else {
+		document.getElementById("avlfacilities").innerHTML = "(No open slots yet)";
+	 }
 	 if(AvailableCenters.length && document.getElementById("beep").checked == true) {
 		var x = 0;
 		var intervalID = setInterval(function () {
