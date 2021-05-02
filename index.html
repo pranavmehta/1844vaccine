@@ -29,8 +29,10 @@
 	  <option value="266">Mysore</option>
 	  <option value="650">Noida</option>
 	  <option value="363">Pune</option>
+	  <option value="173">Rajkot, Gujarat</option>
+	  <option value="775">Rajkot Corporation, Gujarat</option>
 	  <option value="603">Ranga Reddy, Telangana</option>
-	  <option value="167">Valsad, Gugarat</option>
+	  <option value="167">Valsad, Gujarat</option>
 	</select> 
 
 	
@@ -101,7 +103,10 @@ function Fetch() {
   document.getElementById("slots").innerHTML = "";
   var TotCentersChecked = 0;
   var xhttp = new XMLHttpRequest();
+  
   xhttp.onreadystatechange = function() {
+  
+	
     if (this.readyState == 4 && this.status == 200) {
 	 var centers = JSON.parse( this.responseText ).centers;
 	 //console.log(centers);
@@ -129,6 +134,10 @@ function Fetch() {
 			continue;
 		var URL = UrlTemplate.replace("{DistId}", cities.options[i].value).replace("{date}", document.getElementById("date").value);
 		xhttp.open("GET", URL, false);
+		//xhttp.setRequestHeader("Origin", "https://selfregistration.cowin.gov.in");
+		//xhttp.setRequestHeader("If-None-Match", "");
+		//xhttp.setRequestHeader("If-None-Match", "");
+		//https://selfregistration.cowin.gov.in
 		xhttp.send();
 	}
 
