@@ -196,13 +196,13 @@ function Fetch() {
 	 
 	 var avlCenters = "<ul>"
 	 var weekday = new Array(7);
-weekday[0] = "Sunday";
-weekday[1] = "Monday";
-weekday[2] = "Tuesday";
-weekday[3] = "Wednesday";
-weekday[4] = "Thursday";
-weekday[5] = "Friday";
-weekday[6] = "Saturday";
+	 weekday[0] = "Sunday";
+	weekday[1] = "Monday";
+	weekday[2] = "Tuesday";
+	weekday[3] = "Wednesday";
+	weekday[4] = "Thursday";
+	weekday[5] = "Friday";
+	weekday[6] = "Saturday";
 
 	 for(var i = 0; i < AvailableSessions.length; i++) {
 		avlCenters += "<li>";
@@ -222,9 +222,9 @@ weekday[6] = "Saturday";
 				
 			}
 		if(AvailableVaccines.length > 0)	{
-			avlCenters += " (" + AvailableVaccines.join() + ")";			
+			avlCenters += " (<span style='color:#00cc00'>" + AvailableVaccines.join() + "</span>)";			
 		}
-			
+		avlCenters += " - <span style='color:#ff0080'><strong>" + AvailableSessions[i].available_capacity + " slot(s)</strong></span>";	
 		avlCenters += "</li>";
 	 }
 	 avlCenters += "</ul>";
